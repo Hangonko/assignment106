@@ -106,27 +106,41 @@ export class MyElement extends LitElement {
 
   constructor() {
     super();
-    this.tweets = [{
-      name: 'test',
-      post: 'test Tweet'
-    },]
+    this.tweets = loadFromStorage();
+    this.postCount = this.tweets.length;
+    clearStorage();
   }
 
   nameInput(event){
     const name = event.target.value
+    this.name = name;
     console.log(name)
   }
+  
   postInput(event){
     const post = event.target.value
+    this.post = post;
     console.log(post)
   }
 
   postTweet(){
-
+    this.postCount++;
+    // this.tweets = [{name: 'name', post: 'post'}]
+    this.tweet = {
+      name: this.name,
+      post: this.post
+    }
+    this.tweets.push(this.tweet)
+    this.tweets = [...this.tweets]
+    console.log(this.tweets)
+    saveToStorage();
   }
 
   DeleteTweet(index){
-
+    this.postCount --;
+    this.tweets.splice(index, 1);
+    this.tweets = [...this.tweets]
+    console.log(this.tweets)
   }
 
 }
