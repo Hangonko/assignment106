@@ -108,7 +108,7 @@ export class MyElement extends LitElement {
     super();
     this.tweets = loadFromStorage();
     this.postCount = this.tweets.length;
-    clearStorage();
+    // clearStorage();
   }
 
   nameInput(event){
@@ -124,23 +124,23 @@ export class MyElement extends LitElement {
   }
 
   postTweet(){
-    this.postCount++;
     // this.tweets = [{name: 'name', post: 'post'}]
-    this.tweet = {
-      name: this.name,
-      post: this.post
-    }
-    this.tweets.push(this.tweet)
-    this.tweets = [...this.tweets]
-    console.log(this.tweets)
-    saveToStorage();
+    
+    saveToStorage({name: this.name, post: this.post})
+    .then (() => {
+        this.postCount++;
+        this.tweets = loadFromStorage();
+      }
+    )
+    .catch ((error)=> console.log(error));
   }
 
   DeleteTweet(index){
-    this.postCount --;
-    this.tweets.splice(index, 1);
-    this.tweets = [...this.tweets]
-    console.log(this.tweets)
+    deleteFromStorage(index)
+    .then(()=>{
+      this.postCount --;
+      this.tweets = loadFromStorage();
+    }).catch ((error)=> console.log(error));
   }
 
 }
